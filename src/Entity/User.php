@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USER_NAME', fields: ['userName'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USER_NAME', fields: ['user_name'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,7 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    private ?string $userName = null;
+    private ?string $user_name = null;
 
     /**
      * @var list<string> The user roles
@@ -39,14 +39,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getUserName(): ?string
+    public function getUser_name(): ?string
     {
-        return $this->userName;
+        return $this->user_name;
     }
 
-    public function setUserName(string $userName): static
+    public function setUser_name(string $user_name): static
     {
-        $this->userName = $userName;
+        $this->user_name = $user_name;
 
         return $this;
     }
@@ -58,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->userName;
+        return (string) $this->user_name;
     }
 
     /**

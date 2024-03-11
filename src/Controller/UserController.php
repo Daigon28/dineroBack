@@ -21,33 +21,46 @@ class UserController extends AbstractController
     #[Route('/user/register', name: 'user_register')]
     public function register(Request $request, UserPasswordHasherInterface $hasher): JsonResponse
     {
-        $message = '';
-        $requestData = json_decode($request->getContent(), true);
 
-        if (!empty($requestData['password']) || !empty($requestData['username']) ) {
-            $message = "Contraseña o Usuario vacio";
-        }
-        else{
-            $find = $this->em->getRepository(User::class)->findOneBy([
-                'username' => $requestData['username']
-            ]);
-
-            if (empty($find)) {
-                $user = new User();
+        try {
+            $message = '';
+            $requestData = json_decode($request->getContent(), true);
     
-                $plainPassword = $requestData['password'];
-                $hashed = $hasher->hashPassword($user, $plainPassword);
-                $user->setPassword($hashed);
-                $user->setRoles(['ROLE_USER']);
-        
-                $this->em->persist($user);
-                $this->em->flush();
-                $message = 'Usuario registrado con exito';
+            if (empty($requestData['password']) || empty($requestData['username']) ) {
+                $message = "Contraseña o Usuario vacio";
             }
+            else{
+                $message = '1';
+                $find = $this->em->getRepository(User::class)->findOneBy([
+                    'user_name' => $requestData['username']
+                ]);
+                $message = '2';
+    
+                if (empty($find)) {
+                    $user = new User();
+        
+                    $message = '3';
+                    $plainPassword = $requestData['password'];
+                    $hashed = $hasher->hashPassword($user, $plainPassword);
+                    $message = '4';
+                    $user->setUser_name($requestData['username']);
+                    $user->setEmail($requestData['email']);
+                    $user->setPassword($hashed);
+                    $user->setRoles(['ROLE_USER']);
+            
+                    $this->em->persist($user);
+                    $this->em->flush();
+                    $message = 'Usuario registrado con exito';
+                }
+            }
+        } catch (\Throwable $th) {
+            throw $th;
         }
 
         return $this->json([
-            'message' => $message
+            'message' => $message,
+            'data' => $requestData,
+            'send' => $user
         ]);
     }
 
