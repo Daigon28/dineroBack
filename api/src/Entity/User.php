@@ -11,6 +11,7 @@ use App\Controller\LoginController;
 
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Controller\GetUserController;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,12 +22,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     operations:[
+        new Get(uriTemplate: '/getUser', controller: GetUserController::class, read: false, output: false),
         new Get(),
         new GetCollection(),
         new Post(processor: UserPasswordHasher::class),
         new Post(uriTemplate: '/users/login', controller: LoginController::class),
         new Patch(),
-        new Delete(),
+        new Delete()
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -61,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserName(): ?string
     {
-        return $this->user_name;
+        return $this->email;
     }
 
     public function setUserName(string $user_name): static
