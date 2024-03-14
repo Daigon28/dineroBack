@@ -12,6 +12,7 @@ use App\Controller\LoginController;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Controller\GetUserController;
+use App\Controller\UserRegisterController;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,10 +24,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ApiResource(
     operations:[
         new Get(uriTemplate: '/getUser', controller: GetUserController::class, read: false, output: false),
-        new Get(),
         new GetCollection(),
+        new Post(uriTemplate: '/user_login', controller: LoginController::class),
+        new Post(uriTemplate: '/user_register', controller: UserRegisterController::class),
+        new Get(),
         new Post(processor: UserPasswordHasher::class),
-        new Post(uriTemplate: '/users/login', controller: LoginController::class),
         new Patch(),
         new Delete()
     ]
